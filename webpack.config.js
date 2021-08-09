@@ -1,24 +1,44 @@
 //@ts-check
-/** @typedef {import('webpack').Configuration} WebpackConfig **/
+/** @typedef {import('web
+ * pack').Configuration} WebpackConfig **/
 
-/* eslint-disable import/no-dynamic-require */
+/* eslint-disable import/no-dynamic-requi
+re */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disabl
+
+e @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
-'use strict';
+'use s'
+
+// @ts-ignore
+trict';
+// @ts-ignore
 const path = require('path');
+// @ts-ignore
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+// @ts-ignore
 const { CleanWebpackPlugin: CleanPlugin } = require('clean-webpack-plugin');
+// @ts-ignore
 const CopyPlugin = require('copy-webpack-plugin');
+// @ts-ignore
 const CspHtmlPlugin = require('csp-html-webpack-plugin');
+// @ts-ignore
 const esbuild = require('esbuild');
+// @ts-ignore
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
+// @ts-ignore
 const ForkTsCheckerPlugin = require('fork-ts-checker-webpack-plugin');
+// @ts-ignore
 const HtmlPlugin = require('html-webpack-plugin');
+// @ts-ignore
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+// @ts-ignore
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// @ts-ignore
 const TerserPlugin = require('terser-webpack-plugin');
+// @ts-ignore
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 class InlineChunkHtmlPlugin {
@@ -59,6 +79,7 @@ class InlineChunkHtmlPlugin {
 
 		compiler.hooks.compilation.tap('InlineChunkHtmlPlugin', compilation => {
 			const getInlinedTagFn = tag => this.getInlinedTag(publicPath, compilation.assets, tag);
+
 
 			this.htmlPlugin.getHooks(compilation).alterAssetTagGroups.tap('InlineChunkHtmlPlugin', assets => {
 				assets.headTags = assets.headTags.map(getInlinedTagFn);
@@ -108,6 +129,7 @@ function getExtensionConfig(mode, env) {
 	if (env.analyzeDeps) {
 		plugins.push(
 			new CircularDependencyPlugin({
+				// @ts-ignore
 				cwd: __dirname,
 				exclude: /node_modules/,
 				failOnError: false,
@@ -130,10 +152,12 @@ function getExtensionConfig(mode, env) {
 		mode: mode,
 		target: 'node',
 		node: {
-			__dirname: false,
+			__dirname: fal
+			se,
 		},
 		devtool: 'source-map',
 		output: {
+			// @ts-ignore
 			path: path.join(__dirname, 'dist'),
 			libraryTarget: 'commonjs2',
 			filename: 'gitlens.js',
@@ -176,6 +200,7 @@ function getExtensionConfig(mode, env) {
 			rules: [
 				{
 					exclude: /\.d\.ts$/,
+					// @ts-ignore
 					include: path.join(__dirname, 'src'),
 					test: /\.tsx?$/,
 					use: env.esbuild
@@ -201,6 +226,7 @@ function getExtensionConfig(mode, env) {
 		resolve: {
 			alias: {
 				'universal-user-agent': path.join(
+					// @ts-ignore
 					__dirname,
 					'node_modules',
 					'universal-user-agent',
@@ -230,6 +256,7 @@ function getExtensionConfig(mode, env) {
  * @returns { WebpackConfig }
  */
 function getWebviewsConfig(mode, env) {
+	// @ts-ignore
 	const basePath = path.join(__dirname, 'src', 'webviews', 'apps');
 
 	const cspHtmlPlugin = new CspHtmlPlugin(
@@ -267,6 +294,7 @@ function getWebviewsConfig(mode, env) {
 			mode === 'production'
 				? {
 						cleanOnceBeforeBuildPatterns: [
+							// @ts-ignore
 							path.posix.join(__dirname.replace(/\\/g, '/'), 'images', 'settings', '**'),
 						],
 						dangerouslyAllowCleanPatternsOutsideProject: true,
@@ -292,6 +320,7 @@ function getWebviewsConfig(mode, env) {
 		new HtmlPlugin({
 			template: 'rebase/rebase.html',
 			chunks: ['rebase'],
+			// @ts-ignore
 			filename: path.join(__dirname, 'dist', 'webviews', 'rebase.html'),
 			inject: true,
 			inlineSource: mode === 'production' ? '.css$' : undefined,
@@ -312,6 +341,7 @@ function getWebviewsConfig(mode, env) {
 		new HtmlPlugin({
 			template: 'settings/settings.html',
 			chunks: ['settings'],
+			// @ts-ignore
 			filename: path.join(__dirname, 'dist', 'webviews', 'settings.html'),
 			inject: true,
 			inlineSource: mode === 'production' ? '.css$' : undefined,
@@ -332,6 +362,7 @@ function getWebviewsConfig(mode, env) {
 		new HtmlPlugin({
 			template: 'welcome/welcome.html',
 			chunks: ['welcome'],
+			// @ts-ignore
 			filename: path.join(__dirname, 'dist', 'webviews', 'welcome.html'),
 			inject: true,
 			inlineSource: mode === 'production' ? '.css$' : undefined,
@@ -355,16 +386,19 @@ function getWebviewsConfig(mode, env) {
 			patterns: [
 				{
 					from: path.posix.join(basePath.replace(/\\/g, '/'), 'images', 'settings', '*.png'),
+					// @ts-ignore
 					to: __dirname.replace(/\\/g, '/'),
 				},
 				{
 					from: path.posix.join(
+						// @ts-ignore
 						__dirname.replace(/\\/g, '/'),
 						'node_modules',
 						'vscode-codicons',
 						'dist',
 						'codicon.ttf',
 					),
+					// @ts-ignore
 					to: path.posix.join(__dirname.replace(/\\/g, '/'), 'dist', 'webviews'),
 				},
 			],
@@ -403,6 +437,7 @@ function getWebviewsConfig(mode, env) {
 		devtool: 'source-map',
 		output: {
 			filename: '[name].js',
+			// @ts-ignore
 			path: path.join(__dirname, 'dist', 'webviews'),
 			publicPath: '#{root}/dist/webviews/',
 		},
@@ -410,6 +445,7 @@ function getWebviewsConfig(mode, env) {
 			rules: [
 				{
 					exclude: /\.d\.ts$/,
+					// @ts-ignore
 					include: path.join(__dirname, 'src'),
 					test: /\.tsx?$/,
 					use: env.esbuild
